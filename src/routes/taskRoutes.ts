@@ -10,5 +10,9 @@ router.post('/', TaskController.createTask)
 
 router.get('/:id', TaskController.getTaskById)
 
+router.put('/updated/:id', TaskController.updatedById)
+
+router.delete('/deleteTask/:id', TaskController.deleteByIdd)
+
 
 export default router

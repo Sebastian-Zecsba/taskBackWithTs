@@ -37,10 +37,53 @@ export class TaskController {
         }
 
         try{
-            
+
             return res.json(taskById)
         }catch(error){
             res.json({error: 'Has been an error to find the task'})
+        }
+    }
+
+    static updatedById = async (req: Request, res: Response) => {
+
+        try {
+            const { id } = req.params;
+            const { title, description} = req.body;
+    
+            const taskToUpdate = await Task.findByPk(id)
+
+            await taskToUpdate?.update({title, description})
+    
+            return res.json(taskToUpdate)
+        } catch (error) {
+            console.log({error: 'Hubo un error'})
+        }
+    }
+
+    static deleteByIdd = async (req: Request, res: Response) => {
+        const { id } = req.params;
+
+        if(!id){
+            const error = new Error('Task not found')
+            return res.json({error: error.message})
+        }
+
+        try {
+            
+            const taskDeleted = await Task.destroy({
+                where: {
+                    id: Number(id)
+                }
+            })
+
+            if (taskDeleted === 0) {
+                return res.status(404).json({ error: 'Task not found' });
+            }
+
+            return res.json(`Correctly deleted task with id = ${taskDeleted} `)
+
+        } catch (error) {
+            console.log({error: 'Hubo un error'})
         }
     }
 
