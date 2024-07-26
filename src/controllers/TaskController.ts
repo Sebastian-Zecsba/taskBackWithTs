@@ -12,7 +12,6 @@ export class TaskController {
             console.error('Error al traer los datos', error)
             res.status(500).json({error: 'Hubo un error'})
         }
-
     }
     
     static createTask = async ( req: Request, res: Response) => {
@@ -37,7 +36,6 @@ export class TaskController {
         }
 
         try{
-
             return res.json(taskById)
         }catch(error){
             res.json({error: 'Has been an error to find the task'})
@@ -51,6 +49,11 @@ export class TaskController {
             const { title, description} = req.body;
     
             const taskToUpdate = await Task.findByPk(id)
+            
+            if(!taskToUpdate){
+                const error = new Error(`Task with id ${id} not found`)
+                return res.json({error: error.message})
+            }
 
             await taskToUpdate?.update({title, description})
     
